@@ -3,11 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Example usernames of players, these could be dynamic
     const players = [
-        { name: "Farhan", username: "ghost_kiss" },
-        { name: "Player2", username: "player2chess" },
-        { name: "Player3", username: "player3chess" },
-        { name: "Player4", username: "player4chess" },
-        { name: "Player5", username: "player5chess" }
+        { name: "Farhan", username: "ghost_kiss" }
     ];
 
     // Fetch ratings from Chess.com for each player
