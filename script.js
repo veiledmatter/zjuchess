@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Example list of players (can be dynamically added here)
     const players = [
         { name: "Farhan", username: "ghost_kiss" },
-        { name: "Player 2", username: "player_2" },
-        { name: "Player 3", username: "player_3" }
+        { name: "Aaryan", username: "Aaryan2001AA" },
+        { name: "Edbert L", username: "Edbertl" }
     ];
 
     // Loop through players and dynamically create table rows
