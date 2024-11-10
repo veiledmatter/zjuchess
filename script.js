@@ -3,9 +3,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Example list of players (can be dynamically added here)
     const players = [
-        { name: "Farhan", username: "ghost_kiss", rating: 1500 },  // Manually set rating
+        { name: "Farhan", username: "ghost_kiss", }, 
         { name: "Aaryan", username: "Aaryan2001AA" },  // This will fetch rating from Chess.com
-        { name: "Edbert L", username: "Edbertl", rating: 1800 }  // Manually set rating
+        { name: "Edbert L", username: "Edbertl" },
+        { name: "Kenny Ian", username: "kennyianw" },
+        { name: "Test", username: "sifh", rating: 1000 }
     ];
   // Sort players by rating (descending order)
     players.sort((a, b) => b.rating - a.rating);
