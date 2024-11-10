@@ -1,34 +1,36 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const leaderboardContainer = document.getElementById("leaderboard");
+    const tableBody = document.getElementById("leaderboard-body"); // Get the table body container
 
-    // Example list of players
+    // Example list of players (can be dynamically added here)
     const players = [
         { name: "Farhan", username: "ghost_kiss" },
         { name: "Player 2", username: "player_2" },
         { name: "Player 3", username: "player_3" }
     ];
 
+    // Loop through players and dynamically create table rows
     players.forEach((player, index) => {
-        // Create a div for each player
-        const playerDiv = document.createElement("div");
-        playerDiv.classList.add("player");
+        // Create a new row
+        const row = document.createElement("tr");
 
-        // Create the name element and append it to the player div
-        const nameElement = document.createElement("span");
-        nameElement.classList.add("name");
-        nameElement.id = `name-${index}`;
-        nameElement.textContent = player.name;
-        playerDiv.appendChild(nameElement);
+        // Rank cell
+        const rankCell = document.createElement("td");
+        rankCell.textContent = index + 1; // Ranking starts from 1
+        row.appendChild(rankCell);
 
-        // Create the rating element and append it to the player div
-        const ratingElement = document.createElement("span");
-        ratingElement.classList.add("rating");
-        ratingElement.id = `rating-${index}`;
-        ratingElement.textContent = "Loading...";  // Initially loading
-        playerDiv.appendChild(ratingElement);
+        // Name cell
+        const nameCell = document.createElement("td");
+        nameCell.textContent = player.name;
+        row.appendChild(nameCell);
 
-        // Append the player div to the leaderboard container
-        leaderboardContainer.appendChild(playerDiv);
+        // Rating cell
+        const ratingCell = document.createElement("td");
+        ratingCell.classList.add("rating");
+        ratingCell.textContent = "Loading...";  // Initially loading
+        row.appendChild(ratingCell);
+
+        // Append the row to the table body
+        tableBody.appendChild(row);
 
         // Fetch ratings from Chess.com for each player
         fetch(`https://api.chess.com/pub/player/${player.username}/stats`)
@@ -38,8 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.chess_rapid && data.chess_rapid.last && data.chess_rapid.last.rating) {
                     const rapidRating = data.chess_rapid.last.rating;
 
-                    // Update the rating element text
-                    const ratingCell = document.getElementById(`rating-${index}`);
+                    // Set the player's rating
                     ratingCell.textContent = rapidRating;
 
                     // Apply the correct class based on the rating
@@ -54,17 +55,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     } else {
                         ratingCell.classList.add("rating-top");
                     }
-
                 } else {
                     // Handle the case where there is no 'rapid' rating
                     console.error(`No rapid rating available for ${player.username}`);
-                    // You can set a default value or leave the rating cell empty
-                    const ratingCell = document.getElementById(`rating-${index}`);
-                    ratingCell.textContent = "N/A";  // or any default value
+                    ratingCell.textContent = "N/A";  // Or any default value
                 }
             })
             .catch(error => {
                 console.error('Error fetching player data:', error);
+                ratingCell.textContent = "Error";  // Show an error message if something goes wrong
             });
-    }); // Close the forEach method
-}); // Close the DOMContentLoaded event listener
+    });
+});
+
