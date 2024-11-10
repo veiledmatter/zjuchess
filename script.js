@@ -7,7 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
         { name: "Aaryan", username: "Aaryan2001AA" },  // This will fetch rating from Chess.com
         { name: "Edbert L", username: "Edbertl", rating: 1800 }  // Manually set rating
     ];
-
+  // Sort players by rating (descending order)
+    players.sort((a, b) => b.rating - a.rating);
+    
     // Loop through players and dynamically create table rows
     players.forEach((player, index) => {
         // Create a new row for each player
