@@ -1,10 +1,35 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const ratings = document.querySelectorAll(".rating");
+    const leaderboardContainer = document.getElementById("leaderboard");
 
-    // Example usernames of players, these could be dynamic
+    // Example list of players
     const players = [
-        { name: "Farhan", username: "ghost_kiss" }
+        { name: "Farhan", username: "ghost_kiss" },
+        { name: "Player 2", username: "player_2" },
+        { name: "Player 3", username: "player_3" }
     ];
+
+    players.forEach((player, index) => {
+        // Create a div for each player
+        const playerDiv = document.createElement("div");
+        playerDiv.classList.add("player");
+
+        // Create the name element and append it to the player div
+        const nameElement = document.createElement("span");
+        nameElement.classList.add("name");
+        nameElement.id = `name-${index}`;
+        nameElement.textContent = player.name;
+        playerDiv.appendChild(nameElement);
+
+        // Create the rating element and append it to the player div
+        const ratingElement = document.createElement("span");
+        ratingElement.classList.add("rating");
+        ratingElement.id = `rating-${index}`;
+        ratingElement.textContent = "Loading...";  // Initially loading
+        playerDiv.appendChild(ratingElement);
+
+        // Append the player div to the leaderboard container
+        leaderboardContainer.appendChild(playerDiv);
+
 
     // Fetch ratings from Chess.com for each player
     players.forEach((player, index) => {
