@@ -10,9 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
         { name: "Test", username: "sifh", rating: 1000 }
     ];
 
-    // Loop through players and dynamically create table rows
-    players.forEach((player, index) => {
-        // Create a new row for each player
+    // Function to create and append a row to the table
+    function createRow(player, index) {
         const row = document.createElement("tr");
 
         // Rank cell
@@ -28,81 +27,52 @@ document.addEventListener("DOMContentLoaded", function () {
         // Rating cell
         const ratingCell = document.createElement("td");
         ratingCell.classList.add("rating");
-        ratingCell.textContent = "Loading...";  // Initially loading
+        ratingCell.textContent = player.rating || "Loading...";  // Show the rating or "Loading..."
         row.appendChild(ratingCell);
 
-        // Append the row to the table body
         tableBody.appendChild(row);
+    }
 
-        // Check if the player has a manually set rating
-        if (player.rating) {
-            // If manually set, use that rating
-            updateRatingCell(player, ratingCell);
-        } else {
+    // Fetch ratings or use manually set ratings
+    const fetchRatings = players.map(player => {
+        return new Promise((resolve) => {
+            // If player has a manual rating, resolve immediately
+            if (player.rating) {
+                resolve(player);
+                return;
+            }
+
             // If no manual rating, fetch from Chess.com
             fetch(`https://api.chess.com/pub/player/${player.username}/stats`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.chess_rapid && data.chess_rapid.last && data.chess_rapid.last.rating) {
-                        const rapidRating = data.chess_rapid.last.rating;
-                        player.rating = rapidRating;  // Store the fetched rating
-
-                        updateRatingCell(player, ratingCell); // Update the rating cell
+                        player.rating = data.chess_rapid.last.rating;
                     } else {
-                        console.error(`No rapid rating available for ${player.username}`);
-                        ratingCell.textContent = "N/A";  // Or any default value
+                        player.rating = "N/A";  // If no rating is available
                     }
+                    resolve(player);
                 })
-                .catch(error => {
-                    console.error('Error fetching player data:', error);
-                    ratingCell.textContent = "Error";  // Show an error message if something goes wrong
+                .catch(() => {
+                    player.rating = "Error";  // In case of error fetching the rating
+                    resolve(player);
                 });
-        }
+        });
     });
 
-    // After the loop, sort the players by rating (descending order)
-    players.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    // Wait until all ratings are fetched
+    Promise.all(fetchRatings).then(() => {
+        // Sort players by rating in descending order
+        players.sort((a, b) => (b.rating === "N/A" ? -1 : b.rating) - (a.rating === "N/A" ? -1 : a.rating));
 
-    // Once sorting is done, re-render the rows with correct ranking
-    const allRows = Array.from(tableBody.getElementsByTagName("tr"));
-    allRows.forEach(row => row.remove());  // Clear the current rows
+        // Clear the table body
+        tableBody.innerHTML = "";
 
-    // Recreate rows in sorted order
-    players.forEach((player, index) => {
-        const row = document.createElement("tr");
-
-        const rankCell = document.createElement("td");
-        rankCell.textContent = index + 1;
-        row.appendChild(rankCell);
-
-        const nameCell = document.createElement("td");
-        nameCell.textContent = player.name;
-        row.appendChild(nameCell);
-
-        const ratingCell = document.createElement("td");
-        ratingCell.classList.add("rating");
-        ratingCell.textContent = player.rating || "Loading..."; // Show the rating
-        row.appendChild(ratingCell);
-
-        tableBody.appendChild(row);  // Append the new row
+        // Create and append sorted rows
+        players.forEach((player, index) => {
+            createRow(player, index);
+        });
     });
-
-    // Function to update the rating cell with the correct value and class
-    function updateRatingCell(player, ratingCell) {
-        ratingCell.textContent = player.rating || "N/A";  // Set the rating or "N/A"
-
-        // Apply the correct class based on the rating
-        if (player.rating <= 799) {
-            ratingCell.classList.add("rating-low");
-        } else if (player.rating <= 1199) {
-            ratingCell.classList.add("rating-mid-low");
-        } else if (player.rating <= 1499) {
-            ratingCell.classList.add("rating-mid");
-        } else if (player.rating <= 1999) {
-            ratingCell.classList.add("rating-high");
-        } else {
-            ratingCell.classList.add("rating-top");
-        }
-    }
 });
+
 
