@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         { name: "Test", username: "sifh", rating: 1000 }
     ];
 
-    // Function to create and append a row to the table
+    // Function to create and append a row to the table with colors
     function createRow(player, index) {
         const row = document.createElement("tr");
 
@@ -27,9 +27,30 @@ document.addEventListener("DOMContentLoaded", function () {
         // Rating cell
         const ratingCell = document.createElement("td");
         ratingCell.classList.add("rating");
-        ratingCell.textContent = player.rating || "Loading...";  // Show the rating or "Loading..."
-        row.appendChild(ratingCell);
 
+        // Set rating text and color based on rating
+        let rating = player.rating || "Loading...";  // Default to "Loading..." if not available
+        ratingCell.textContent = rating;
+        
+        // Apply color based on rating
+        if (rating !== "Loading..." && rating !== "N/A" && rating !== "Error") {
+            if (rating <= 799) {
+                ratingCell.classList.add("rating-low");
+            } else if (rating <= 1199) {
+                ratingCell.classList.add("rating-mid-low");
+            } else if (rating <= 1499) {
+                ratingCell.classList.add("rating-mid");
+            } else if (rating <= 1999) {
+                ratingCell.classList.add("rating-high");
+            } else {
+                ratingCell.classList.add("rating-top");
+            }
+        } else {
+            // For cases like N/A or Error
+            ratingCell.classList.add("rating-low");  // Example class for Error or N/A
+        }
+
+        row.appendChild(ratingCell);
         tableBody.appendChild(row);
     }
 
@@ -63,16 +84,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // Wait until all ratings are fetched
     Promise.all(fetchRatings).then(() => {
         // Sort players by rating in descending order
-        players.sort((a, b) => (b.rating === "N/A" ? -1 : b.rating) - (a.rating === "N/A" ? -1 : a.rating));
+        players.sort((a, b) => {
+            if (a.rating === "N/A" || a.rating === "Error") return 1;
+            if (b.rating === "N/A" || b.rating === "Error") return -1;
+            return b.rating - a.rating;
+        });
 
         // Clear the table body
         tableBody.innerHTML = "";
 
-        // Create and append sorted rows
+        // Create and append sorted rows with rating colors
         players.forEach((player, index) => {
             createRow(player, index);
         });
     });
 });
-
-
