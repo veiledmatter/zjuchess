@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZJU Chess Club Leaderboard</title>
     <link rel="stylesheet" href="styles.css">
-    <div id="leaderboard"></div>
     <script src="script.js"></script>
 </head>
 <body>
@@ -24,14 +23,8 @@
                     <th>Rating</th>
                 </tr>
             </thead>
-            <tbody>
-		<tr>
-  		  <td>1</td>
-  		  <td>Farhan</td>
-  		  <td class="rating">Loading...</td> <!-- Rating will be dynamically inserted -->
-		</tr>
-		
-                <!-- Add more players as needed -->
+            <tbody id="leaderboard-body">
+                <!-- Table rows will be dynamically added here -->
             </tbody>
         </table>
     </section>
@@ -41,3 +34,4 @@
     </footer>
 </body>
 </html>
+
