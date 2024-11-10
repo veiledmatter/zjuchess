@@ -41,5 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 console.error('Error fetching player data:', error);
             });
-    });
-});
+    }); // Close the forEach method
+}); // Close the DOMContentLoaded event listener
+
