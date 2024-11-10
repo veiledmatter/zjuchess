@@ -30,9 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Append the player div to the leaderboard container
         leaderboardContainer.appendChild(playerDiv);
 
-
-    // Fetch ratings from Chess.com for each player
-    players.forEach((player, index) => {
+        // Fetch ratings from Chess.com for each player
         fetch(`https://api.chess.com/pub/player/${player.username}/stats`)
             .then(response => response.json())
             .then(data => {
@@ -40,7 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.chess_rapid && data.chess_rapid.last && data.chess_rapid.last.rating) {
                     const rapidRating = data.chess_rapid.last.rating;
 
-                    const ratingCell = ratings[index];
+                    // Update the rating element text
+                    const ratingCell = document.getElementById(`rating-${index}`);
                     ratingCell.textContent = rapidRating;
 
                     // Apply the correct class based on the rating
@@ -60,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Handle the case where there is no 'rapid' rating
                     console.error(`No rapid rating available for ${player.username}`);
                     // You can set a default value or leave the rating cell empty
-                    const ratingCell = ratings[index];
+                    const ratingCell = document.getElementById(`rating-${index}`);
                     ratingCell.textContent = "N/A";  // or any default value
                 }
             })
