@@ -11,40 +11,35 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(`https://api.chess.com/pub/player/${player.username}/stats`)
             .then(response => response.json())
             .then(data => {
+                // Check if 'chess_rapid' and 'last' and 'rating' exist in the response
                 if (data.chess_rapid && data.chess_rapid.last && data.chess_rapid.last.rating) {
                     const rapidRating = data.chess_rapid.last.rating;
 
-                    // Select the name and rating cells for this player
-                    const ratingCell = document.querySelector(`#rating-${index + 1}`);
-                    const nameCell = document.querySelector(`#name-${index + 1}`);
-
+                    const ratingCell = ratings[index];
                     ratingCell.textContent = rapidRating;
 
-                    // Determine the correct class based on the rating and apply it to both cells
-                    let ratingClass;
+                    // Apply the correct class based on the rating
                     if (rapidRating <= 799) {
-                        ratingClass = "rating-low";
+                        ratingCell.classList.add("rating-low");
                     } else if (rapidRating <= 1199) {
-                        ratingClass = "rating-mid-low";
+                        ratingCell.classList.add("rating-mid-low");
                     } else if (rapidRating <= 1499) {
-                        ratingClass = "rating-mid";
+                        ratingCell.classList.add("rating-mid");
                     } else if (rapidRating <= 1999) {
-                        ratingClass = "rating-high";
+                        ratingCell.classList.add("rating-high");
                     } else {
-                        ratingClass = "rating-top";
+                        ratingCell.classList.add("rating-top");
                     }
-
-                    // Apply the class to both the name and rating cells
-                    ratingCell.classList.add(ratingClass);
-                    nameCell.classList.add(ratingClass);
                 } else {
+                    // Handle the case where there is no 'rapid' rating
                     console.error(`No rapid rating available for ${player.username}`);
-                    document.querySelector(`#rating-${index + 1}`).textContent = "N/A";
+                    // You can set a default value or leave the rating cell empty
+                    const ratingCell = ratings[index];
+                    ratingCell.textContent = "N/A";  // or any default value
                 }
             })
             .catch(error => {
                 console.error('Error fetching player data:', error);
             });
-    });
-});
-
+    }); // Close the forEach method
+}); // Close the DOMContentLoaded event listener
