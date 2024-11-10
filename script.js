@@ -3,95 +3,98 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Example list of players (can be dynamically added here)
     const players = [
-        { name: "Farhan", username: "ghost_kiss", }, 
+        { name: "Farhan", username: "ghost_kiss" }, 
         { name: "Aaryan", username: "Aaryan2001AA" },  // This will fetch rating from Chess.com
         { name: "Edbert L", username: "Edbertl" },
         { name: "Kenny Ian", username: "kennyianw" },
         { name: "Test", username: "sifh", rating: 1000 }
     ];
-  // Sort players by rating (descending order)
-    players.sort((a, b) => b.rating - a.rating);
-    
-    // Loop through players and dynamically create table rows
-    players.forEach((player, index) => {
-        // Create a new row for each player
-        const row = document.createElement("tr");
 
-        // Rank cell
-        const rankCell = document.createElement("td");
-        rankCell.textContent = index + 1; // Ranking starts from 1
-        row.appendChild(rankCell);
+    // Create an array to hold all promises
+    const promises = players.map((player, index) => {
+        return new Promise((resolve, reject) => {
+            // Create a new row for each player
+            const row = document.createElement("tr");
 
-        // Name cell
-        const nameCell = document.createElement("td");
-        nameCell.textContent = player.name;
-        row.appendChild(nameCell);
+            // Rank cell
+            const rankCell = document.createElement("td");
+            rankCell.textContent = index + 1; // Ranking starts from 1
+            row.appendChild(rankCell);
 
-        // Rating cell
-        const ratingCell = document.createElement("td");
-        ratingCell.classList.add("rating");
-        ratingCell.textContent = "Loading...";  // Initially loading
-        row.appendChild(ratingCell);
+            // Name cell
+            const nameCell = document.createElement("td");
+            nameCell.textContent = player.name;
+            row.appendChild(nameCell);
 
-        // Append the row to the table body
-        tableBody.appendChild(row);
+            // Rating cell
+            const ratingCell = document.createElement("td");
+            ratingCell.classList.add("rating");
+            ratingCell.textContent = "Loading...";  // Initially loading
+            row.appendChild(ratingCell);
 
-        // Check if the player has a manually set rating
-        if (player.rating) {
-            // If manually set, use that rating
-            ratingCell.textContent = player.rating;
+            // Append the row to the table body
+            tableBody.appendChild(row);
 
-            // Apply the correct class based on the manually set rating
-            if (player.rating <= 799) {
-                ratingCell.classList.add("rating-low");
-            } else if (player.rating <= 1199) {
-                ratingCell.classList.add("rating-mid-low");
-            } else if (player.rating <= 1499) {
-                ratingCell.classList.add("rating-mid");
-            } else if (player.rating <= 1999) {
-                ratingCell.classList.add("rating-high");
+            // Check if the player has a manually set rating
+            if (player.rating) {
+                // If manually set, use that rating
+                ratingCell.textContent = player.rating;
+
+                // Apply the correct class based on the manually set rating
+                if (player.rating <= 799) {
+                    ratingCell.classList.add("rating-low");
+                } else if (player.rating <= 1199) {
+                    ratingCell.classList.add("rating-mid-low");
+                } else if (player.rating <= 1499) {
+                    ratingCell.classList.add("rating-mid");
+                } else if (player.rating <= 1999) {
+                    ratingCell.classList.add("rating-high");
+                } else {
+                    ratingCell.classList.add("rating-top");
+                }
+                resolve(); // Resolve the promise if rating is set manually
             } else {
-                ratingCell.classList.add("rating-top");
-            }
-        } else {
-            // If no manual rating, fetch from Chess.com
-            fetch(`https://api.chess.com/pub/player/${player.username}/stats`)
-                .then(response => response.json())
-                .then(data => {
-                    // Check if 'chess_rapid' and 'last' and 'rating' exist in the response
-                    if (data.chess_rapid && data.chess_rapid.last && data.chess_rapid.last.rating) {
-                        const rapidRating = data.chess_rapid.last.rating;
+                // If no manual rating, fetch from Chess.com
+                fetch(`https://api.chess.com/pub/player/${player.username}/stats`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Check if 'chess_rapid' and 'last' and 'rating' exist in the response
+                        if (data.chess_rapid && data.chess_rapid.last && data.chess_rapid.last.rating) {
+                            const rapidRating = data.chess_rapid.last.rating;
 
-                        // Set the player's rating
-                        ratingCell.textContent = rapidRating;
+                            // Set the player's rating
+                            ratingCell.textContent = rapidRating;
 
-                        // Apply the correct class based on the rating
-                        if (rapidRating <= 799) {
-                            ratingCell.classList.add("rating-low");
-                        } else if (rapidRating <= 1199) {
-                            ratingCell.classList.add("rating-mid-low");
-                        } else if (rapidRating <= 1499) {
-                            ratingCell.classList.add("rating-mid");
-                        } else if (rapidRating <= 1999) {
-                            ratingCell.classList.add("rating-high");
+                            // Apply the correct class based on the rating
+                            if (rapidRating <= 799) {
+                                ratingCell.classList.add("rating-low");
+                            } else if (rapidRating <= 1199) {
+                                ratingCell.classList.add("rating-mid-low");
+                            } else if (rapidRating <= 1499) {
+                                ratingCell.classList.add("rating-mid");
+                            } else if (rapidRating <= 1999) {
+                                ratingCell.classList.add("rating-high");
+                            } else {
+                                ratingCell.classList.add("rating-top");
+                            }
+                            resolve(); // Resolve the promise when fetch is done
                         } else {
-                            ratingCell.classList.add("rating-top");
+                            // Handle the case where there is no 'rapid' rating
+                            console.error(`No rapid rating available for ${player.username}`);
+                            ratingCell.textContent = "N/A";  // Or any default value
+                            resolve(); // Resolve the promise even if data is not found
                         }
-                    } else {
-                        // Handle the case where there is no 'rapid' rating
-                        console.error(`No rapid rating available for ${player.username}`);
-                        ratingCell.textContent = "N/A";  // Or any default value
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching player data:', error);
-                    ratingCell.textContent = "Error";  // Show an error message if something goes wrong
-                });
-        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching player data:', error);
+                        ratingCell.textContent = "Error";  // Show an error message if something goes wrong
+                        resolve(); // Resolve the promise even in case of an error
+                    });
+            }
+        });
     });
-});
 
-  // Once all promises are resolved (i.e., all ratings are fetched and set), sort players and re-render them
+    // Once all promises are resolved (i.e., all ratings are fetched and set), sort players and re-render them
     Promise.all(promises).then(() => {
         // Sort players by rating (descending order)
         players.sort((a, b) => (b.rating || 0) - (a.rating || 0));
@@ -123,4 +126,5 @@ document.addEventListener("DOMContentLoaded", function () {
             tableBody.appendChild(row);
         });
     });
+});
 
