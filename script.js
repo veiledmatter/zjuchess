@@ -20,23 +20,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     ratingCell.textContent = rapidRating;
 
-                    // Determine the color based on the rating and apply it to both cells
-                    let color;
+                    // Determine the correct class based on the rating and apply it to both cells
+                    let ratingClass;
                     if (rapidRating <= 799) {
-                        color = "lightblue";
+                        ratingClass = "rating-low";
                     } else if (rapidRating <= 1199) {
-                        color = "darkblue";
+                        ratingClass = "rating-mid-low";
                     } else if (rapidRating <= 1499) {
-                        color = "violet";
+                        ratingClass = "rating-mid";
                     } else if (rapidRating <= 1999) {
-                        color = "purple";
+                        ratingClass = "rating-high";
                     } else {
-                        color = "maroon";
+                        ratingClass = "rating-top";
                     }
 
-                    // Apply the color to both the name and rating cells
-                    ratingCell.style.color = color;
-                    nameCell.style.color = color;
+                    // Apply the class to both the name and rating cells
+                    ratingCell.classList.add(ratingClass);
+                    nameCell.classList.add(ratingClass);
                 } else {
                     console.error(`No rapid rating available for ${player.username}`);
                     document.querySelector(`#rating-${index + 1}`).textContent = "N/A";
@@ -47,5 +47,4 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 });
-
 
