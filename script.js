@@ -123,4 +123,4 @@ document.addEventListener("DOMContentLoaded", function () {
             tableBody.appendChild(row);
         });
     });
-});
+
