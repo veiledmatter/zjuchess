@@ -90,3 +90,37 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+  // Once all promises are resolved (i.e., all ratings are fetched and set), sort players and re-render them
+    Promise.all(promises).then(() => {
+        // Sort players by rating (descending order)
+        players.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+
+        // Clear the existing table rows and re-render sorted rows
+        tableBody.innerHTML = "";
+
+        players.forEach((player, index) => {
+            // Create a new row for each player
+            const row = document.createElement("tr");
+
+            // Rank cell
+            const rankCell = document.createElement("td");
+            rankCell.textContent = index + 1; // Ranking starts from 1
+            row.appendChild(rankCell);
+
+            // Name cell
+            const nameCell = document.createElement("td");
+            nameCell.textContent = player.name;
+            row.appendChild(nameCell);
+
+            // Rating cell
+            const ratingCell = document.createElement("td");
+            ratingCell.classList.add("rating");
+            ratingCell.textContent = player.rating || "Loading..."; // Show the rating or "Loading..." text
+            row.appendChild(ratingCell);
+
+            // Append the row to the table body
+            tableBody.appendChild(row);
+        });
+    });
+});
