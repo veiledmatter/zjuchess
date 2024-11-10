@@ -30,8 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     } else {
                         ratingCell.classList.add("rating-top");
                     }
-                        ratingCell.style.fontWeight = "bold";
-                        nameCell.style.fontWeight = "bold";
+
                 } else {
                     // Handle the case where there is no 'rapid' rating
                     console.error(`No rapid rating available for ${player.username}`);
