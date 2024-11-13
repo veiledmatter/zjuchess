@@ -8,7 +8,9 @@ document.addEventListener("DOMContentLoaded", function () {
         { name: "Edbert L", username: "Edbertl" },
         { name: "Kenny Ian", username: "kennyianw" },
         { name: "Thana-ard Kasemsuk", username: "Puard850" },
-        { name: "Haqy Ghiffari", username: "Dewa_KipasSmurf"}
+        { name: "Haqy Ghiffari", username: "Dewa_KipasSmurf"},
+        { name: "Edbert Hansen", username: "SOD020"},
+        { name: "Wan Li Ping", username: "pinger224"}
     ];
 
     // Function to create and append a row to the table with colors
