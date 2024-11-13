@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
         { name: "Aaryan", username: "Aaryan2001AA" },  // This will fetch rating from Chess.com
         { name: "Edbert L", username: "Edbertl" },
         { name: "Kenny Ian", username: "kennyianw" },
-        { name: "Kenny Ian", username: "kennyianw" },
+        { name: "Thana-ard Kasemsuk", username: "Puard850" },
         { name: "Haqy Ghiffari", username: "Dewa_KipasSmurf"}
     ];
 
