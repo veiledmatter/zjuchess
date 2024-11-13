@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
         { name: "Aaryan", username: "Aaryan2001AA" },  // This will fetch rating from Chess.com
         { name: "Edbert L", username: "Edbertl" },
         { name: "Kenny Ian", username: "kennyianw" },
-        { name: "Test", username: "sifh", rating: 1000 }
+        { name: "Kenny Ian", username: "kennyianw" },
+        { name: "Haqy Ghiffari", username: "Dewa_KipasSmurf"}
     ];
 
     // Function to create and append a row to the table with colors
